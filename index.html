@@ -387,17 +387,6 @@
 
     let dropCounter = 0;
     let dropInterval = 1000;
-    let lastTime = 0;
-
-    function update(time = 0) {
-        const deltaTime = time - lastTime;
-        lastTime = time;
-        dropCounter += deltaTime;
-        if (dropCounter > dropInterval) playerDrop();
-        draw();
-        requestAnimationFrame(update);
-    }
-
         let gameRunning = false;
 
     function update(time = 0) {
@@ -412,9 +401,11 @@
 
     function startGame() {
         if (audioCtx.state === 'suspended') audioCtx.resume();
+        const btn = document.getElementById('start-btn');
+        if (btn) btn.style.display = 'none'; // Le bouton disparaît au clic
+        
         if (!gameRunning) {
             gameRunning = true;
-            document.getElementById('start-btn').style.display = 'none';
             playerReset();
             updateScore();
             update();
@@ -422,24 +413,14 @@
         }
     }
 
-    // Liaison du bouton START
-    const sBtn = document.getElementById('start-btn');
-    sBtn.addEventListener('click', startGame);
-    sBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startGame(); });
-
-    // Liaison des touches directionnelles
-    const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
-    Object.keys(cmds).forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (!gameRunning) startGame();
-            if (cmds[id] === 'd') playerDrop();
-            else if (cmds[id] === 'r') playerRotate(1);
-            else playerMove(cmds[id]);
-        }, {passive: false});
-    });
+    // On lie le bouton physiquement
+    window.onload = () => {
+        const sBtn = document.getElementById('start-btn');
+        if (sBtn) {
+            sBtn.onclick = startGame;
+            sBtn.ontouchstart = (e) => { e.preventDefault(); startGame(); };
+        }
+    };
 </script>
 </body>
 </html>
