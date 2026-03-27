@@ -383,21 +383,22 @@
     let dropInterval = 1000;
     let lastTime = 0;
 
-        Object.keys(cmds).forEach(id => {
+            const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
+    Object.keys(cmds).forEach(id => {
         const el = document.getElementById(id);
-        const act = (e) => {
-            e.preventDefault(); handleStart();
-            if(cmds[id] === 'd') playerDrop();
-            else if(cmds[id] === 'r') playerRotate(1);
+        if(!el) return;
+        el.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (cmds[id] === 'd') playerDrop();
+            else if (cmds[id] === 'r') playerRotate(1);
             else playerMove(cmds[id]);
-        };
-        el.addEventListener('touchstart', act, {passive: false});
-        el.addEventListener('mousedown', act);
+        }, {passive: false});
     });
 
-        playerReset();
+    playerReset();
     updateScore();
     update();
-        </script>
+</script>
 </body>
 </html>
