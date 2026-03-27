@@ -369,7 +369,7 @@
         playSound(440, 'square', 0.05); // Son Rotation
     }
 
-    function rotate(matrix, dir) {
+        function rotate(matrix, dir) {
         for (let y = 0; y < matrix.length; ++y) {
             for (let x = 0; x < y; ++x) {
                 [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
@@ -383,29 +383,25 @@
     let dropInterval = 1000;
     let lastTime = 0;
 
-                const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
-    
+    function update(time = 0) {
+        const deltaTime = time - lastTime;
+        lastTime = time;
+        dropCounter += deltaTime;
+        if (dropCounter > dropInterval) playerDrop();
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
     Object.keys(cmds).forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-        
         el.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            
-            // Réveil de l'audio
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            
-            // Exécution de l'action
-            const action = cmds[id];
-            if (action === 'd') {
-                playerDrop();
-            } else if (action === 'r') {
-                playerRotate(1);
-            } else {
-                playerMove(action);
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (cmds[id] === 'd') playerDrop();
+            else if (cmds[id] === 'r') playerRotate(1);
+            else playerMove(cmds[id]);
         }, {passive: false});
     });
 
