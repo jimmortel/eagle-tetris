@@ -1,249 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Eagle Tetris 🦅📱</title>
     <style>
-        body { 
-            background: #1a1a1a; 
-            color: gold; 
-            font-family: Arial, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; 
-            min-height: 100vh; 
-            margin: 0; 
-            overflow: hidden; 
-            touch-action: none; /* Crucial pour mobile */
-            padding-top: 20px;
+        body {
+            background: #1a1a1a;
+            color: gold;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            touch-action: none;
+            padding-top: 10px;
         }
-            h1 { font-size: 1.1rem; margin: 5px 0; }
-#game-layout { 
-    transform: scale(0.75); 
-    transform-origin: top center; 
-    margin-top: -20px;
-}
-    #start-btn { 
-        padding: 10px 20px; 
-        font-size: 16px; 
-        margin-bottom: 5px; 
-    }
-    #game-layout { 
-        display: flex; 
-        transform: scale(0.8); 
-        transform-origin: top center; 
-    }
-    .controls { margin-top: -20px; }
-#game-layout { 
-    display: flex; 
-    transform: scale(0.85); 
-    transform-origin: top center; 
-    margin-top: -10px;
-}
-
-        #game-container { 
-            position: relative; 
-            border: 4px solid gold; 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        h1 { font-size: 1.1rem; margin: 5px 0; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        #start-btn {
+            background: red; color: white; font-weight: bold; padding: 12px 24px;
+            border: 3px solid white; border-radius: 8px; margin-bottom: 5px;
+            font-size: 16px; cursor: pointer; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        #game-layout {
+            display: flex;
+            gap: 10px;
+            transform: scale(0.75); /* Réduit la taille pour remonter les boutons */
+            transform-origin: top center;
+        }
+        #game-container {
+            position: relative;
+            border: 4px solid gold;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
             background: #000;
-            line-height: 0;
         }
-        canvas { 
-            display: block; 
-            height: 60vh; /* Agrandit le jeu visuellement */
-            width: auto;
-        }
-        
-        .stats { 
-            text-align: left; 
-            font-size: 16px;
+        canvas { display: block; background-color: #000; }
+        .stats {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
             font-weight: bold;
-            min-width: 70px;
+            font-size: 1.2rem;
+            min-width: 80px;
         }
-        
-        /* Stylisation des Boutons Tactiles */
-        #mobile-controls { 
-            margin-top: 15px; 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            width: 90%; 
-            max-width: 300px; 
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: -30px; /* Remonte les boutons vers le jeu */
+            width: 90%;
+            max-width: 300px;
         }
-        .touch-btn { 
-            background: #000; 
-            color: gold; 
-            border: 2px solid gold; 
-            border-radius: 10px; 
-            padding: 15px; 
-            font-size: 20px; 
-            font-weight: bold;
-            text-align: center; 
+        .touch-btn {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid gold;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 20px;
+            color: gold;
+            text-align: center;
             user-select: none;
-            -webkit-user-select: none;
             touch-action: manipulation;
-            box-shadow: 0 4px #444;
-            transition: all 0.1s ease;
         }
-        .touch-btn:active { 
-            background: #333; 
-            box-shadow: 0 1px #222;
-            transform: translateY(3px); 
-        }
-        #btn-rotate { grid-column: 2; font-size: 24px;} /* Centré en haut */
-        #btn-left { grid-column: 1; grid-row: 2; }
-        #btn-down { grid-column: 2; grid-row: 2; }
-        #btn-right { grid-column: 3; grid-row: 2; }
-
+        .touch-btn:active { background: gold; color: black; }
+        #btn-rotate { grid-column: 2; }
+        #btn-left { grid-column: 1; }
+        #btn-down { grid-column: 2; }
+        #btn-right { grid-column: 3; }
     </style>
 </head>
 <body>
     <h1>EAGLE TETRIS 🦅📱</h1>
-    <button id="start-btn" style="background: gold; color: black; font-weight: bold; padding: 15px 30px; border: none; border-radius: 5px; margin-bottom: 20px; font-size: 18px; cursor: pointer;">
-    START EAGLE ARCADE 🦅
-</button>
+    <button id="start-btn">START EAGLE ARCADE 🦅</button>
+
     <div id="game-layout">
         <div id="game-container">
             <canvas id="tetris" width="240" height="400"></canvas>
         </div>
         <div class="stats">
-            <div>Score:<br><span id="score">0</span></div><br>
+            <div>Score:<br><span id="score">0</span></div>
+            <br>
             <div>Lines:<br><span id="lines">0</span></div>
         </div>
     </div>
 
-    <div id="mobile-controls">
-        <div class="touch-btn" id="btn-rotate">↻</div>
-        <div class="touch-btn" id="btn-left">←</div>
-        <div class="touch-btn" id="btn-down">↓</div>
-        <div class="touch-btn" id="btn-right">→</div>
+    <div class="controls">
+        <div id="btn-rotate" class="touch-btn">↻</div>
+        <div id="btn-left" class="touch-btn">←</div>
+        <div id="btn-down" class="touch-btn">↓</div>
+        <div id="btn-right" class="touch-btn">→</div>
     </div>
-
     <script>
-        const canvas = document.getElementById('tetris');
-        const context = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const linesElement = document.getElementById('lines');
-        
-        context.scale(20, 20);
+    const canvas = document.getElementById('tetris');
+    const context = canvas.getContext('2d');
+    const scoreElement = document.getElementById('score');
+    const linesElement = document.getElementById('lines');
 
-        function arenaSweep() {
-            let rowCount = 1;
-            outer: for (let y = arena.length - 1; y > 0; --y) {
-                for (let x = 0; x < arena[y].length; ++x) {
-                    if (arena[y][x] === 0) continue outer;
-                }
-                const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row);
-                ++y;
-                player.score += rowCount * 10;
-                player.lines += 1;
-                rowCount *= 2;
-            }
-            updateScore();
-        }
+    context.scale(20, 20);
 
-        function collide(arena, player) {
-            const [m, o] = [player.matrix, player.pos];
-            for (let y = 0; y < m.length; ++y) {
-                for (let x = 0; x < m[y].length; ++x) {
-                    if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) return true;
-                }
-            }
-            return false;
-        }
-
-        function createMatrix(w, h) {
-            const matrix = [];
-            while (h--) matrix.push(new Array(w).fill(0));
-            return matrix;
-        }
-
-        function createPiece(type) {
-            if (type === 'T') return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
-            if (type === 'O') return [[2, 2], [2, 2]];
-            if (type === 'L') return [[0, 3, 0], [0, 3, 0], [0, 3, 3]];
-            if (type === 'J') return [[4, 0, 0], [4, 0, 0], [4, 4, 0]];
-            if (type === 'I') return [[0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0]];
-            if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
-            if (type === 'Z') return [[7, 7, 0], [0, 7, 7], [0, 0, 0]];
-        }
-
-        function draw() {
-            context.fillStyle = '#000';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            drawMatrix(arena, {x: 0, y: 0});
-            drawMatrix(player.matrix, player.pos);
-        }
-
-        const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
-
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        context.fillStyle = colors[value];
-                        context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        context.lineWidth = 0.05;
-                        context.strokeStyle = 'white';
-                        context.strokeRect(x + offset.x, y + offset.y, 1, 1);
-                    }
-                });
-            });
-        }
-
-        function merge(arena, player) {
-            player.matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
-                });
-            });
-        }
-<script>
-    // --- MOTEUR AUDIO EAGLE ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let musicStarted = false;
-
-    function playNote(freq, start, duration) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square'; // Son rétro GameBoy
-        osc.frequency.setValueAtTime(freq, start);
-        gain.gain.setValueAtTime(0.05, start); // Volume musique (assez bas)
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(start);
-        osc.stop(start + duration);
-    }
-
-    // Mélodie mythique : [Fréquence, Durée]
-    const theme = [
-        [659, 4], [493, 8], [523, 8], [587, 4], [523, 8], [493, 8],
-        [440, 4], [440, 8], [523, 8], [659, 4], [587, 8], [523, 8],
-        [493, 4], [493, 8], [523, 8], [587, 4], [659, 4],
-        [523, 4], [440, 4], [440, 4]
-    ];
-
-    function playMusicLoop() {
-        if (!musicStarted) return;
-        let tempo = 0.15; // Vitesse
-        let now = audioCtx.currentTime;
-        let offset = 0;
-
-        theme.forEach(note => {
-            let duration = (1 / note[1]) * 2;
-            playNote(note[0], now + offset, duration);
-            offset += duration;
-        });
-
-        // Relance la boucle après la fin de la mélodie (~4 secondes)
-        setTimeout(playMusicLoop, offset * 1000);
-    }
-
-    function playSound(freq, type, duration) {
+    function playTone(freq, duration, type = 'square') {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
@@ -256,20 +115,67 @@
         osc.stop(audioCtx.currentTime + duration);
     }
 
-    const startAudio = () => {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        if (!musicStarted) {
-            musicStarted = true;
-            playMusicLoop();
-        }
-    };
+    function playMusicLoop() {
+        const notes = [261, 329, 392, 523];
+        let i = 0;
+        setInterval(() => {
+            if (gameRunning) playTone(notes[i++ % notes.length], 0.2, 'triangle');
+        }, 500);
+    }
 
-    // --- LOGIQUE TETRIS ---
-    const canvas = document.getElementById('tetris');
-    const context = canvas.getContext('2d');
-    const scoreElement = document.getElementById('score');
-    const linesElement = document.getElementById('lines');
-    context.scale(20, 20);
+    function createPiece(type) {
+        if (type === 'I') return [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]];
+        else if (type === 'L') return [[0, 2, 0], [0, 2, 0], [0, 2, 2]];
+        else if (type === 'J') return [[0, 3, 0], [0, 3, 0], [3, 3, 0]];
+        else if (type === 'O') return [[4, 4], [4, 4]];
+        else if (type === 'Z') return [[5, 5, 0], [0, 5, 5], [0, 0, 0]];
+        else if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
+        else if (type === 'T') return [[0, 7, 0], [7, 7, 7], [0, 0, 0]];
+    }
+
+    const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
+
+    function createArena(w, h) {
+        const matrix = [];
+        while (h--) matrix.push(new Array(w).fill(0));
+        return matrix;
+    }
+
+    function drawMatrix(matrix, offset) {
+        matrix.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) {
+                    context.fillStyle = colors[value];
+                    context.fillRect(x + offset.x, y + offset.y, 1, 1);
+                }
+            });
+        });
+    }
+
+    function draw() {
+        context.fillStyle = '#000';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        drawMatrix(arena, {x: 0, y: 0});
+        drawMatrix(player.matrix, player.pos);
+    }
+
+    function merge(arena, player) {
+        player.matrix.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
+            });
+        });
+    }
+
+    function collide(arena, player) {
+        const [m, o] = [player.matrix, player.pos];
+        for (let y = 0; y < m.length; ++y) {
+            for (let x = 0; x < m[y].length; ++x) {
+                if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) return true;
+            }
+        }
+        return false;
+    }
 
     function arenaSweep() {
         let rowCount = 1;
@@ -283,66 +189,9 @@
             player.score += rowCount * 10;
             player.lines += 1;
             rowCount *= 2;
-            playSound(523, 'square', 0.2); // Son Ligne
+            playTone(880, 0.1, 'sine');
         }
         updateScore();
-    }
-
-    function collide(arena, player) {
-        const [m, o] = [player.matrix, player.pos];
-        for (let y = 0; y < m.length; ++y) {
-            for (let x = 0; x < m[y].length; ++x) {
-                if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) return true;
-            }
-        }
-        return false;
-    }
-
-    function createMatrix(w, h) {
-        const matrix = [];
-        while (h--) matrix.push(new Array(w).fill(0));
-        return matrix;
-    }
-
-    function createPiece(type) {
-        if (type === 'T') return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
-        if (type === 'O') return [[2, 2], [2, 2]];
-        if (type === 'L') return [[0, 3, 0], [0, 3, 0], [0, 3, 3]];
-        if (type === 'J') return [[4, 0, 0], [4, 0, 0], [4, 4, 0]];
-        if (type === 'I') return [[0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0]];
-        if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
-        if (type === 'Z') return [[7, 7, 0], [0, 7, 7], [0, 0, 0]];
-    }
-
-    function draw() {
-        context.fillStyle = '#000';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        drawMatrix(arena, {x: 0, y: 0});
-        drawMatrix(player.matrix, player.pos);
-    }
-
-    const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
-
-    function drawMatrix(matrix, offset) {
-        matrix.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) {
-                    context.fillStyle = colors[value];
-                    context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                    context.lineWidth = 0.05;
-                    context.strokeStyle = 'white';
-                    context.strokeRect(x + offset.x, y + offset.y, 1, 1);
-                }
-            });
-        });
-    }
-
-    function merge(arena, player) {
-        player.matrix.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
-            });
-        });
     }
 
     function playerDrop() {
@@ -352,7 +201,6 @@
             merge(arena, player);
             playerReset();
             arenaSweep();
-            playSound(150, 'triangle', 0.05); // Son Pose
         }
         dropCounter = 0;
     }
@@ -360,19 +208,6 @@
     function playerMove(dir) {
         player.pos.x += dir;
         if (collide(arena, player)) player.pos.x -= dir;
-    }
-
-    function playerReset() {
-        const pieces = 'ILJOTSZ';
-        player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
-        player.pos.y = 0;
-        player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-        if (collide(arena, player)) {
-            arena.forEach(row => row.fill(0));
-            player.score = 0;
-            player.lines = 0;
-            updateScore();
-        }
     }
 
     function playerRotate(dir) {
@@ -388,10 +223,9 @@
                 return;
             }
         }
-        playSound(440, 'square', 0.05); // Son Rotation
     }
 
-        function rotate(matrix, dir) {
+    function rotate(matrix, dir) {
         for (let y = 0; y < matrix.length; ++y) {
             for (let x = 0; x < y; ++x) {
                 [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
@@ -401,6 +235,26 @@
         else matrix.reverse();
     }
 
+    function playerReset() {
+        const pieces = 'ILJOTSZ';
+        player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+        player.pos.y = 0;
+        player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+        if (collide(arena, player)) {
+            arena.forEach(row => row.fill(0));
+            player.score = 0;
+            player.lines = 0;
+            updateScore();
+        }
+    }
+
+    function updateScore() {
+        scoreElement.innerText = player.score;
+        linesElement.innerText = player.lines;
+    }
+
+    const arena = createArena(12, 20);
+    const player = { pos: {x: 0, y: 0}, matrix: null, score: 0, lines: 0 };
             let dropCounter = 0;
     let dropInterval = 1000;
     let lastTime = 0;
@@ -420,37 +274,45 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const btn = document.getElementById('start-btn');
         if (btn) btn.style.display = 'none';
+        
         if (!gameRunning) {
             gameRunning = true;
             playerReset();
             updateScore();
             update();
-            if (typeof playMusicLoop === 'function') playMusicLoop();
+            playMusicLoop();
         }
     }
 
-    window.onload = () => {
-        const sBtn = document.getElementById('start-btn');
-        if (sBtn) {
-            sBtn.onclick = startGame;
-            sBtn.ontouchstart = (e) => { e.preventDefault(); startGame(); };
+    // Liaison physique du bouton Start
+    const sBtn = document.getElementById('start-btn');
+    sBtn.onclick = startGame;
+    sBtn.ontouchstart = (e) => { e.preventDefault(); startGame(); };
+
+    // Liaison des contrôles tactiles
+    const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
+    Object.keys(cmds).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const handleAction = (e) => {
+                e.preventDefault();
+                if (!gameRunning) startGame();
+                if (cmds[id] === 'd') playerDrop();
+                else if (cmds[id] === 'r') playerRotate(1);
+                else playerMove(cmds[id]);
+            };
+            el.ontouchstart = handleAction;
+            el.onclick = handleAction;
         }
-        const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
-        Object.keys(cmds).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                const act = (e) => {
-                    e.preventDefault();
-                    if (!gameRunning) startGame();
-                    if (cmds[id] === 'd') playerDrop();
-                    else if (cmds[id] === 'r') playerRotate(1);
-                    else playerMove(cmds[id]);
-                };
-                el.onclick = act;
-                el.ontouchstart = act;
-            }
-        });
-    };
+    });
+
+    // Clavier pour le test PC
+    document.addEventListener('keydown', event => {
+        if (event.keyCode === 37) playerMove(-1);
+        else if (event.keyCode === 39) playerMove(1);
+        else if (event.keyCode === 40) playerDrop();
+        else if (event.keyCode === 38) playerRotate(1);
+    });
 </script>
 </body>
 </html>
