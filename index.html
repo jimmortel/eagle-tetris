@@ -396,9 +396,10 @@
         else matrix.reverse();
     }
 
-    let dropCounter = 0;
+        let dropCounter = 0;
     let dropInterval = 1000;
-        let gameRunning = false;
+    let lastTime = 0;
+    let gameRunning = false;
 
     function update(time = 0) {
         if (!gameRunning) return;
@@ -413,7 +414,7 @@
     function startGame() {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const btn = document.getElementById('start-btn');
-        if (btn) btn.style.display = 'none'; // Le bouton disparaît au clic
+        if (btn) btn.style.display = 'none';
         
         if (!gameRunning) {
             gameRunning = true;
@@ -424,13 +425,28 @@
         }
     }
 
-    // On lie le bouton physiquement
     window.onload = () => {
         const sBtn = document.getElementById('start-btn');
         if (sBtn) {
             sBtn.onclick = startGame;
             sBtn.ontouchstart = (e) => { e.preventDefault(); startGame(); };
         }
+
+        const cmds = {'btn-left':-1, 'btn-right':1, 'btn-down':'d', 'btn-rotate':'r'};
+        Object.keys(cmds).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const act = (e) => {
+                    e.preventDefault();
+                    if (!gameRunning) startGame();
+                    if (cmds[id] === 'd') playerDrop();
+                    else if (cmds[id] === 'r') playerRotate(1);
+                    else playerMove(cmds[id]);
+                };
+                el.onclick = act;
+                el.ontouchstart = act;
+            }
+        });
     };
 </script>
 </body>
