@@ -250,9 +250,24 @@
         }
     }
 
-    function updateScore() {
-        scoreElement.innerText = player.score;
-        linesElement.innerText = player.lines;
+        function updateScore() {
+        // Met à jour le score actuel et les lignes
+        document.getElementById('score').innerText = player.score;
+        document.getElementById('lines').innerText = player.lines;
+        
+        // Gère le Record (High Score) via le stockage du téléphone
+        let savedHighScore = localStorage.getItem('eagleTetrisHiScore') || 0;
+        
+        if (player.score > savedHighScore) {
+            localStorage.setItem('eagleTetrisHiScore', player.score);
+            savedHighScore = player.score;
+        }
+        
+        // Affiche le record dans la balise qu'on a créée
+        const hiScoreElement = document.getElementById('high-score');
+        if (hiScoreElement) {
+            hiScoreElement.innerText = savedHighScore;
+        }
     }
 
     const arena = createArena(12, 20);
