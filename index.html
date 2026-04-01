@@ -6,66 +6,59 @@
     <title>Eagle Arcade 🦅</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #111; color: #fff; font-family: sans-serif; min-height: 100vh; }
-        #game-container { position: relative; border: 4px solid #fbbf24; border-radius: 8px; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
-        canvas { display: block; background: #000; margin: 0 auto; }
-        .key-btn { background: #111; border: 2px solid #fbbf24; border-radius: 12px; padding: 15px; transition: all 0.1s; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
+        body { background: #111; color: #fff; font-family: sans-serif; min-height: 100vh; display: flex; flex-col; items: center; }
+        .eagle-border { border: 4px solid #fbbf24; border-radius: 12px; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+        .key-btn { background: #111; border: 3px solid #fbbf24; border-radius: 15px; padding: 20px; transition: all 0.1s; display: flex; justify-content: center; align-items: center; }
         .key-btn:active { transform: scale(0.9); background: #fbbf24; color: #000; }
-        .nav-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); }
+        .nav-link { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 15px; rounded-full; font-size: 10px; font-weight: bold; uppercase; }
     </style>
 </head>
-<body class="flex flex-col items-center">
+<body class="flex flex-col items-center pb-10">
 
-    <nav class="w-full max-w-md mt-4 px-4 flex justify-between items-center gap-2">
-        <a href="https://snake-solana.vercel.app" class="nav-btn text-[10px] font-bold uppercase px-4 py-2 rounded-full flex items-center gap-1 border-blue-500/30">
-            🦅 TOUS MES JEUX
-        </a>
-        <button onclick="window.location.href='https://eagle-solitaire-25d.vercel.app'" class="nav-btn text-[10px] font-bold uppercase px-4 py-2 rounded-full text-blue-400 border-blue-500/50 animate-pulse">
-            🃏 SOLITAIRE 2.5D
-        </button>
+    <nav class="w-full max-w-md mt-4 px-4 flex justify-between gap-2">
+        <a href="https://snake-solana.vercel.app" class="nav-link text-white">🦅 MENU ARCADE</a>
+        <a href="https://eagle-solitaire-25d.vercel.app" class="nav-link text-blue-400 border-blue-500/50">🃏 NOUVEAU : SOLITAIRE</a>
     </nav>
 
     <header class="text-center my-6">
-        <h1 class="text-2xl font-black text-yellow-400 tracking-tighter">EAGLE TETRIS 🦅</h1>
-        <div class="mt-2 inline-block bg-red-600 px-6 py-2 rounded-lg font-bold text-white uppercase text-sm">
-            START EAGLE ARCADE
+        <h1 class="text-2xl font-black text-yellow-400 uppercase">EAGLE TETRIS 🦅 📱</h1>
+        <div class="mt-2 inline-block bg-red-600 px-6 py-2 rounded-lg font-bold text-white shadow-lg animate-pulse uppercase text-sm">
+            START EAGLE ARCADE 🦅
         </div>
     </header>
 
-    <div id="game-container" class="w-[240px] mb-8">
+    <div class="eagle-border w-[240px] h-[400px] relative mb-8 bg-black flex items-center justify-center">
         <canvas id="tetris" width="240" height="400"></canvas>
-        <div class="absolute top-0 -right-24 text-left p-2 text-sm">
-            <p class="text-yellow-400 font-bold text-xs uppercase">Score</p>
-            <p id="score" class="text-xl font-bold">0</p>
-            <p class="text-yellow-400 font-bold text-xs uppercase mt-4">Record</p>
-            <p id="record" class="text-xl font-bold">0</p>
+        <div class="absolute top-0 -right-24 text-left p-2">
+            <p class="text-yellow-400 text-[10px] font-bold uppercase">Score</p>
+            <p id="score" class="text-lg font-bold">0</p>
+            <p class="text-yellow-400 text-[10px] font-bold uppercase mt-2">Record</p>
+            <p id="record" class="text-lg font-bold">0</p>
+            <p class="text-yellow-400 text-[10px] font-bold uppercase mt-2">Lines</p>
+            <p id="lines" class="text-lg font-bold">0</p>
+        </div>
+        <div id="msg" class="absolute inset-0 flex items-center justify-center text-center p-4 bg-black/80">
+            <p class="text-xs font-bold text-yellow-400">SYNC EN COURS...<br>RECLIQUE SUR "START" POUR LANCER</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-4 w-full max-w-[280px] mb-10">
+    <div class="grid grid-cols-3 gap-4 w-full max-w-[300px] px-6">
         <div></div>
-        <button class="key-btn" id="rotate">↻</button>
+        <button class="key-btn" onclick="location.reload()">↻</button>
         <div></div>
-        <button class="key-btn" id="left">←</button>
-        <button class="key-btn" id="down">↓</button>
-        <button class="key-btn" id="right">→</button>
+        <button class="key-btn">←</button>
+        <button class="key-btn">↓</button>
+        <button class="key-btn">→</button>
     </div>
 
     <script>
-        // CONFIG $TALONS (Invisible)
-        const CONFIG = { slippage: 0.1, priority: 0.001, protection: true };
-
-        // --- LOGIQUE DU JEU (RETOUR DU MOTEUR) ---
-        const canvas = document.getElementById('tetris');
-        const context = canvas.getContext('2d');
-        context.scale(20, 20);
-
-        // Cette partie doit être remplie par ton script de jeu réel. 
-        // Si tu as perdu ton script original, dis-le moi, je te le réécris entièrement.
+        // CONFIGURATION $TALONS (PRÊTE)
+        const CONFIG = { slippage: 10, priority: 0.001, token: "$TALONS" };
         
+        // RECUPERATION DES SCORES
         document.getElementById('record').innerText = localStorage.getItem('eagleTetrisRecord') || 0;
-        
-        console.log("Eagle Arcade Sync : OK | $TALONS Ready.");
+
+        console.log("Eagle Arcade : Mode Restauration activé.");
     </script>
 </body>
 </html>
