@@ -14,6 +14,10 @@
     </style>
 </head>
 <body class="text-white font-sans antialiased">
+        <nav style="width: 100%; display: flex; justify-content: space-between; padding: 15px 20px; box-sizing: border-box; background: rgba(0,0,0,0.3); border-bottom: 1px solid #333;">
+        <a href="https://snake-solana.vercel.app" style="color: white; font-size: 11px; font-weight: bold; text-decoration: none; border: 1px solid #444; padding: 6px 12px; border-radius: 20px; text-transform: uppercase;">🦅 Arcade</a>
+        <a href="https://eagle-solitaire-25d.vercel.app" style="color: #3b82f6; font-size: 11px; font-weight: bold; text-decoration: none; border: 1px solid #3b82f6; padding: 6px 12px; border-radius: 20px; text-transform: uppercase;">🃏 Solitaire</a>
+        </nav>
     <div class="max-w-md mx-auto px-6 py-12">
         <header class="text-center mb-12">
             <h1 class="text-4xl font-black tracking-tighter neon-text mb-2">EAGLE ARCADE <span class="text-blue-500">🦅</span></h1>
@@ -87,6 +91,14 @@
             const text = encodeURIComponent(`🦅 I'm on a ${streak} days streak on the Eagle Arcade! 🔥 Can you beat me? @eagle-pi`);
             window.location.href = `https://warpcast.com/~/compose?text=${text}&embeds[]=https://eagle-tetris-game.vercel.app`;
         }
+        // --- CONFIGURATION $TALONS EAGLE ARCADE ---
+const EAGLE_SETTINGS = {
+    slippage: "10%",
+    priorityFee: 0.001,
+    frontRunProtection: "Auto",
+    token: "$TALONS"
+};
+console.log("Eagle Arcade Sync: $TALONS settings 10%/0.001 active.");
     </script>
 </body>
                                                                                                    </html>
