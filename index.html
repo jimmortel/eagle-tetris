@@ -2,220 +2,91 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eagle Arcade 🦅</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #111; color: #fff; font-family: sans-serif; min-height: 100vh; overflow: hidden; touch-action: manipulation; }
-        .eagle-border { border: 4px solid #fbbf24; border-radius: 12px; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); background: #000; }
-        .key-btn { background: #111; border: 3px solid #fbbf24; border-radius: 15px; height: 70px; transition: all 0.1s; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; }
-        .key-btn:active { transform: scale(0.9); background: #fbbf24; color: #000; }
-        .nav-link { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 9999px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        canvas { display: block; width: 100%; height: 100%; }
+        body { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .glass:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); border-color: #3b82f6; }
+        .neon-text { text-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .game-icon { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3)); }
     </style>
 </head>
-<body class="flex flex-col items-center">
+<body class="text-white font-sans antialiased">
+    <div class="max-w-md mx-auto px-6 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-black tracking-tighter neon-text mb-2">EAGLE ARCADE <span class="text-blue-500">🦅</span></h1>
+            <div class="inline-flex items-center gap-2 bg-blue-500/20 px-4 py-1.5 rounded-full border border-blue-500/30">
+                <span class="text-blue-400">🔥 Streak:</span>
+                <span id="streakCount" class="font-bold">0</span>
+                <span class="text-blue-400 text-sm">jours</span>
+            </div>
+        </header>
 
-    <nav class="w-full max-w-md mt-4 px-4 flex justify-between gap-2">
-        <a href="https://snake-solana.vercel.app" class="nav-link text-white">🦅 MENU ARCADE</a>
-        <a href="https://eagle-solitaire-25d.vercel.app" class="nav-link text-blue-400 border-blue-500/50">🃏 SOLITAIRE 2.5D</a>
-    </nav>
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <a href="https://eagle-tetris-game.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">🧩</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-blue-400">Tetris</span>
+            </a>
+            
+            <a href="https://snake-solana.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">🐍</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-green-400">Snake</span>
+            </a>
 
-    <header class="text-center my-4">
-        <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter">EAGLE TETRIS 🦅</h1>
-    </header>
+            <a href="https://eagle-wheel.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">🎡</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-purple-400">Wheel</span>
+            </a>
 
-    <div class="eagle-border w-[240px] h-[400px] relative mb-6">
-        <canvas id="tetris"></canvas>
-        <div class="absolute top-0 -right-24 text-left p-2">
-            <p class="text-yellow-400 text-[10px] font-bold uppercase">Score</p>
-            <div id="score" class="text-xl font-bold">0</div>
-            <p class="text-yellow-400 text-[10px] font-bold uppercase mt-4">Record</p>
-            <div id="record" class="text-xl font-bold">0</div>
+            <a href="https://eagle-demineur.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">💣</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-red-400">Mines</span>
+            </a>
+
+            <a href="https://eagle-pop.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">🎈</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-pink-400">Pop It</span>
+            </a>
+
+            <a href="https://eagle-jump.vercel.app" onclick="updateStreak()" class="glass p-6 rounded-[2rem] flex flex-col items-center">
+                <span class="text-4xl mb-3 game-icon">🦘</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-yellow-400">Jump</span>
+            </a>
         </div>
-    </div>
 
-    <div class="grid grid-cols-3 gap-4 w-full max-w-[300px] px-6">
-        <div></div>
-        <button class="key-btn" id="btn-rotate">↻</button>
-        <div></div>
-        <button class="key-btn" id="btn-left">←</button>
-        <button class="key-btn" id="btn-down">↓</button>
-        <button class="key-btn" id="btn-right">→</button>
+        <button onclick="share()" class="w-full bg-white text-black font-black py-4 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 transition-transform uppercase tracking-tighter">
+            Partager ma Streak 🚀
+        </button>
+            
+        </button>
+
+        <button onclick="window.location.href='https://warpcast.com/eagle-pi'" class="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl border border-blue-400/50 active:scale-95 transition-transform flex items-center justify-center gap-2">
+            💰 Tip for $Dunk
+        </button>
     </div>
 
     <script>
-        // CONFIGURATION $TALONS & SÉCURITÉ
-        const EAGLE_SETTINGS = {
-            slippage: 0.10, // 10%
-            priorityFee: 0.001, // 0.001 SOL
-            token: "$TALONS"
-        };
+        const streakEl = document.getElementById('streakCount');
+        let streak = localStorage.getItem('eagleStreak') || 0;
+        let lastDate = localStorage.getItem('eagleLastDate');
+        streakEl.innerText = streak;
 
-        const canvas = document.getElementById('tetris');
-        const context = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const recordElement = document.getElementById('record');
-
-        context.scale(20, 20);
-
-        // MOTEUR DE JEU TETRIS
-        function arenaSweep() {
-            let rowCount = 1;
-            outer: for (let y = arena.length - 1; y > 0; --y) {
-                for (let x = 0; x < arena[y].length; ++x) {
-                    if (arena[y][x] === 0) continue outer;
-                }
-                const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row);
-                ++y;
-                player.score += rowCount * 10;
-                rowCount *= 2;
-            }
-            updateScore();
-        }
-
-        function collide(arena, player) {
-            const [m, o] = [player.matrix, player.pos];
-            for (let y = 0; y < m.length; ++y) {
-                for (let x = 0; x < m[y].length; ++x) {
-                    if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) return true;
-                }
-            }
-            return false;
-        }
-
-        function createMatrix(w, h) {
-            const matrix = [];
-            while (h--) matrix.push(new Array(w).fill(0));
-            return matrix;
-        }
-
-        function createPiece(type) {
-            if (type === 'T') return [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
-            else if (type === 'O') return [[2, 2], [2, 2]];
-            else if (type === 'L') return [[0, 3, 0], [0, 3, 0], [0, 3, 3]];
-            else if (type === 'J') return [[0, 4, 0], [0, 4, 0], [4, 4, 0]];
-            else if (type === 'I') return [[0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0]];
-            else if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
-            else if (type === 'Z') return [[7, 7, 0], [0, 7, 7], [0, 0, 0]];
-        }
-
-        function draw() {
-            context.fillStyle = '#000';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            drawMatrix(arena, {x: 0, y: 0});
-            drawMatrix(player.matrix, player.pos);
-        }
-
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        context.fillStyle = ['#fbbf24', '#3b82f6', '#ef4444', '#10b981', '#a855f7', '#f97316', '#ec4899'][value - 1];
-                        context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                    }
-                });
-            });
-        }
-
-        function merge(arena, player) {
-            player.matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
-                });
-            });
-        }
-
-        function playerDrop() {
-            player.pos.y++;
-            if (collide(arena, player)) {
-                player.pos.y--;
-                merge(arena, player);
-                playerReset();
-                arenaSweep();
-                updateScore();
-            }
-            dropCounter = 0;
-        }
-
-        function playerMove(dir) {
-            player.pos.x += dir;
-            if (collide(arena, player)) player.pos.x -= dir;
-        }
-
-        function playerReset() {
-            const pieces = 'ILJOTSZ';
-            player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
-            player.pos.y = 0;
-            player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-            if (collide(arena, player)) {
-                arena.forEach(row => row.fill(0));
-                if (player.score > (localStorage.getItem('eagleTetrisRecord') || 0)) {
-                    localStorage.setItem('eagleTetrisRecord', player.score);
-                }
-                player.score = 0;
-                updateScore();
+        function updateStreak() {
+            const today = new Date().toDateString();
+            if (lastDate !== today) {
+                streak = parseInt(streak) + 1;
+                localStorage.setItem('eagleStreak', streak);
+                localStorage.setItem('eagleLastDate', today);
+                streakEl.innerText = streak;
             }
         }
 
-        function playerRotate(dir) {
-            const pos = player.pos.x;
-            let offset = 1;
-            rotate(player.matrix, dir);
-            while (collide(arena, player)) {
-                player.pos.x += offset;
-                offset = -(offset + (offset > 0 ? 1 : -1));
-                if (offset > player.matrix[0].length) {
-                    rotate(player.matrix, -dir);
-                    player.pos.x = pos;
-                    return;
-                }
-            }
+        function share() {
+            const text = encodeURIComponent(`🦅 I'm on a ${streak} days streak on the Eagle Arcade! 🔥 Can you beat me? @eagle-pi`);
+            window.location.href = `https://warpcast.com/~/compose?text=${text}&embeds[]=https://eagle-tetris-game.vercel.app`;
         }
-
-        function rotate(matrix, dir) {
-            for (let y = 0; y < matrix.length; ++y) {
-                for (let x = 0; x < y; ++x) {
-                    [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-                }
-            }
-            if (dir > 0) matrix.forEach(row => row.reverse());
-            else matrix.reverse();
-        }
-
-        let dropCounter = 0;
-        let dropInterval = 1000;
-        let lastTime = 0;
-
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
-            dropCounter += deltaTime;
-            if (dropCounter > dropInterval) playerDrop();
-            draw();
-            requestAnimationFrame(update);
-        }
-
-        function updateScore() {
-            scoreElement.innerText = player.score;
-            recordElement.innerText = localStorage.getItem('eagleTetrisRecord') || 0;
-        }
-
-        const arena = createMatrix(12, 20);
-        const player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
-
-        // CONTRÔLES EVENT LISTENER
-        document.getElementById('btn-left').addEventListener('click', () => playerMove(-1));
-        document.getElementById('btn-right').addEventListener('click', () => playerMove(1));
-        document.getElementById('btn-down').addEventListener('click', () => playerDrop());
-        document.getElementById('btn-rotate').addEventListener('click', () => playerRotate(1));
-
-        playerReset();
-        updateScore();
-        update();
-        
-        console.log("Eagle Tetris restauré avec succès. Paramètres $TALONS appliqués.");
     </script>
 </body>
-</html>
+                                                                                                   </html>
