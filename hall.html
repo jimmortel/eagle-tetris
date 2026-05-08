@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TALON HALL OF FAME 🏆</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); min-height: 100vh; color: white; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.08); }
@@ -19,57 +20,98 @@
         </button>
         <span class="text-[9px] font-bold tracking-widest text-amber-500 uppercase">Top Pilots Only</span>
     </nav>
-        <div class="max-w-md mx-auto px-4 py-6">
+
+    <div class="max-w-md mx-auto px-4 py-6">
         <header class="text-center mb-8">
             <h1 class="text-3xl font-black tracking-tighter neon-text uppercase italic">Hall of Fame</h1>
-            <p class="text-[9px] text-gray-500 uppercase tracking-[0.2em] mt-1">Elite Rankings • Updated Weekly</p>
+            <p class="text-[9px] text-gray-500 uppercase tracking-[0.2em] mt-1">Elite Rankings • Live Data</p>
         </header>
 
-        <div class="grid grid-cols-3 gap-2 items-end mb-8 text-center">
-            <div class="glass p-3 rounded-t-xl h-24 flex flex-col justify-center border-b-0">
-                <span class="text-xl mb-1 text-gray-400">🥈</span>
-                <p class="text-[9px] font-bold truncate">Pilot_X</p>
-                <p class="text-[8px] text-blue-400">2.8k</p>
+        <div id="podium" class="grid grid-cols-3 gap-2 items-end mb-8 text-center opacity-0 transition-opacity duration-500">
             </div>
-            <div class="glass podium-1 p-4 rounded-t-2xl h-32 flex flex-col justify-center border-b-0 relative">
-                <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-2xl">👑</span>
-                <span class="text-2xl mb-1">🥇</span>
-                <p class="text-[10px] font-black truncate text-amber-500">TopEagle</p>
-                <p class="text-[9px] text-white">5.2k</p>
-            </div>
-            <div class="glass p-3 rounded-t-xl h-20 flex flex-col justify-center border-b-0">
-                <span class="text-lg mb-1 text-orange-700">🥉</span>
-                <p class="text-[9px] font-bold truncate">Shadow_P</p>
-                <p class="text-[8px] text-blue-400">1.9k</p>
-            </div>
-        </div>
 
         <div class="space-y-2">
             <h2 class="text-[9px] font-black uppercase text-gray-500 mb-3 tracking-widest px-1 text-center">Standard Rankings</h2>
-            
-            <div class="glass p-3 rounded-xl flex justify-between items-center px-5 border-white/5">
-                <div class="flex items-center gap-4">
-                    <span class="text-[10px] font-bold text-gray-500">#4</span>
-                    <span class="text-[11px] font-medium text-gray-300 italic">Vortex_Rider</span>
-                </div>
-                <span class="text-[10px] font-mono text-blue-400">850 pts</span>
-            </div>
-
-            <div class="glass p-3 rounded-xl flex justify-between items-center px-5 border-white/5">
-                <div class="flex items-center gap-4">
-                    <span class="text-[10px] font-bold text-gray-500">#5</span>
-                    <span class="text-[11px] font-medium text-gray-300 italic">Neon_Ace</span>
-                </div>
-                <span class="text-[10px] font-mono text-blue-400">620 pts</span>
+            <div id="leaderboard-list" class="space-y-2">
+                <p class="text-center text-[10px] text-gray-600 animate-pulse">Scanning the blockchain...</p>
             </div>
 
             <div class="mt-8 p-4 border border-dashed border-white/10 rounded-2xl text-center">
                 <p class="text-[8px] text-gray-500 uppercase leading-relaxed">
-                    Rankings are based on <span class="text-blue-400">Streak Days</span> and <span class="text-amber-500">High Scores</span>.<br>
-                    Next data sync: <span class="text-white">Sunday Night</span>.
+                    Rankings are based on <span class="text-blue-400">High Scores</span>.<br>
+                    Real-time sync: <span class="text-white">Active</span>.
                 </p>
             </div>
         </div>
     </div>
+
+    <script>
+        // Configuration Supabase (Tes clés sécurisées)
+        const SUPABASE_URL = "https://rjkyjqmydriagpiatbsr.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqa3lqcW15ZHJpYWduaWF0YnNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0MDk0NjYsImV4cCI6MjA1NTk4NTQ2Nn0.7U68_2G0Zp-N8S8O9UfI_W7eY9k8v_k3k9k8v_k3k9k"; // Remplace si nécessaire par ta clé anon complète
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function loadLeaderboard() {
+            const { data, error } = await supabase
+                .from('leaderboard')
+                .select('*')
+                .order('score', { ascending: false })
+                .limit(10);
+
+            if (error) {
+                console.error('Erreur:', error);
+                return;
+            }
+
+            renderPodium(data.slice(0, 3));
+            renderList(data.slice(3));
+        }
+
+        function renderPodium(top3) {
+            const podiumDiv = document.getElementById('podium');
+            const p2 = top3[1] || { username: '---', score: 0 };
+            const p1 = top3[0] || { username: '---', score: 0 };
+            const p3 = top3[2] || { username: '---', score: 0 };
+
+            podiumDiv.innerHTML = `
+                <div class="glass p-3 rounded-t-xl h-24 flex flex-col justify-center border-b-0">
+                    <span class="text-xl mb-1 text-gray-400">🥈</span>
+                    <p class="text-[9px] font-bold truncate">${p2.username}</p>
+                    <p class="text-[8px] text-blue-400">${p2.score}</p>
+                </div>
+                <div class="glass podium-1 p-4 rounded-t-2xl h-32 flex flex-col justify-center border-b-0 relative">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-2xl">👑</span>
+                    <span class="text-2xl mb-1">🥇</span>
+                    <p class="text-[10px] font-black truncate text-amber-500">${p1.username}</p>
+                    <p class="text-[9px] text-white">${p1.score}</p>
+                </div>
+                <div class="glass p-3 rounded-t-xl h-20 flex flex-col justify-center border-b-0">
+                    <span class="text-lg mb-1 text-orange-700">🥉</span>
+                    <p class="text-[9px] font-bold truncate">${p3.username}</p>
+                    <p class="text-[8px] text-blue-400">${p3.score}</p>
+                </div>
+            `;
+            podiumDiv.classList.remove('opacity-0');
+        }
+
+        function renderList(others) {
+            const listDiv = document.getElementById('leaderboard-list');
+            if (others.length === 0) {
+                listDiv.innerHTML = '<p class="text-center text-[10px] text-gray-600">Waiting for more challengers...</p>';
+                return;
+            }
+            listDiv.innerHTML = others.map((player, index) => `
+                <div class="glass p-3 rounded-xl flex justify-between items-center px-5 border-white/5">
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-bold text-gray-500">#${index + 4}</span>
+                        <span class="text-[11px] font-medium text-gray-300 italic">${player.username}</span>
+                    </div>
+                    <span class="text-[10px] font-mono text-blue-400">${player.score} pts</span>
+                </div>
+            `).join('');
+        }
+
+        loadLeaderboard();
+    </script>
 </body>
 </html>
