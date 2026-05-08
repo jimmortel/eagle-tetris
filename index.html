@@ -10,33 +10,54 @@
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s ease; }
         .glass:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.08); border-color: #3b82f6; }
         .neon-text { text-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-        .premium-border { border: 1px solid rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.05); }
+        .premium-border { border: 1px solid rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.05); }
         @media (max-height: 700px) {
             .game-card { padding: 0.5rem !important; }
-            .game-icon { font-size: 1.5rem !important; }
-            header { margin-bottom: 1rem !important; }
+            header { margin-bottom: 0.5rem !important; }
         }
     </style>
 </head>
 <body class="text-white font-sans antialiased">
-    <nav class="w-full flex justify-between items-center px-4 py-2 bg-black/40 border-b border-white/10">
+    <nav class="w-full flex justify-between items-center px-4 py-3 bg-black/40 border-b border-white/10">
         <span class="text-[9px] font-bold tracking-widest text-blue-400 uppercase">TALON SYNC: Active</span>
-        <a href="https://highlight.xyz/mint/base:0xa2A15fFaA85D3deC725aEFaED66c9C5141aC35A8:1" class="text-[9px] bg-amber-500/20 border border-amber-500/50 px-3 py-1 rounded-full text-amber-500 font-bold uppercase tracking-tighter">
-            👑 Elite Pass (50 Ltd)
+        <a href="https://highlight.xyz/mint/base:0xa2A15fFaA85D3deC725aEFaED66c9C5141aC35A8:1" class="text-[9px] bg-amber-500/20 border border-amber-500/50 px-3 py-1 rounded-full text-amber-500 font-bold uppercase tracking-tighter hover:bg-amber-500/40 transition-colors">
+            👑 Elite Pass (Unlock Nest)
         </a>
     </nav>
-        <div class="max-w-md mx-auto px-4 py-4">
-        <header class="text-center mb-6">
+
+    <div class="max-w-md mx-auto px-4 py-4">
+        <header class="text-center mb-4">
             <h1 class="text-3xl font-black tracking-tighter neon-text uppercase">Talon Arcade 🦅</h1>
-            <div class="flex justify-center gap-4 mt-2">
-                <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-[11px]">
-                    <span class="text-blue-400 font-medium">Streak:</span> <span id="streakCount" class="font-bold">0</span> j
+            <div class="flex justify-center gap-4 mt-1">
+                <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-[10px]">
+                    <span class="text-blue-400 font-medium">Pilot Streak:</span> <span id="streakCount" class="font-bold">0</span> j
                 </div>
             </div>
         </header>
 
+        <div class="glass mb-6 p-4 rounded-2xl border-blue-500/30">
+            <h3 class="text-[10px] text-blue-400 uppercase font-black mb-2 tracking-widest">Guide du Pilote 📋</h3>
+            <div class="space-y-2">
+                <div class="flex gap-2 items-start">
+                    <span class="text-xs">🪙</span>
+                    <p class="text-[9px] text-gray-400 leading-tight">Chaque partie coûte <span class="text-white font-bold">1 $TALON</span> (sauf 1er tour de roue offert).</p>
+                </div>
+                <div class="flex gap-2 items-start">
+                    <span class="text-xs">🎟️</span>
+                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-blue-300 font-bold text-[10px]">GENERAL PASS :</span> Jouez gratuitement à vie aux jeux publics.</p>
+                </div>
+                <div class="flex gap-2 items-start">
+                    <span class="text-xs">👑</span>
+                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-amber-500 font-bold text-[10px]">ELITE PASS :</span> Débloque le "Elite Nest" & bonus exclusifs.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="mb-6">
-            <h2 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3 px-1 text-center">Public Games (1 $TALON / play)</h2>
+            <h2 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3 px-1 flex justify-between">
+                <span>Public Games</span>
+                <span class="text-blue-400">1 $TALON / Play</span>
+            </h2>
             <div class="grid grid-cols-2 gap-3">
                 <a href="https://eagle-tetris-game.vercel.app" onclick="updateStreak()" class="glass p-5 rounded-2xl flex flex-col items-center">
                     <span class="text-3xl mb-2">🧩</span>
@@ -56,10 +77,11 @@
                 </a>
             </div>
         </div>
-                <div class="mb-8">
+
+        <div class="mb-8">
             <h2 class="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-3 px-1 flex justify-between items-center">
                 <span>Elite Nest (Elite NFT Required)</span>
-                <span class="text-[8px] bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">LIFETIME</span>
+                <span class="text-[8px] bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 italic font-black">PREMIUM ONLY</span>
             </h2>
             <div class="grid grid-cols-3 gap-2">
                 <a href="https://eagle-demineur.vercel.app" onclick="updateStreak()" class="glass premium-border p-4 rounded-2xl flex flex-col items-center">
@@ -72,8 +94,8 @@
                 </a>
                 <div class="glass premium-border p-4 rounded-2xl flex flex-col items-center opacity-70">
                     <span class="text-2xl mb-1">💎</span>
-                    <span class="text-[9px] font-bold uppercase text-blue-400 italic">Elite Vault</span>
-                    <span class="text-[7px] text-gray-500">Syncing...</span>
+                    <span class="text-[9px] font-bold uppercase text-blue-400 italic">Vault</span>
+                    <span class="text-[7px] text-gray-500">Soon</span>
                 </div>
             </div>
         </div>
@@ -85,16 +107,17 @@
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="window.location.href='https://highlight.xyz/mint/base:0x57D361170e2F8E7e4490D14120eA93D551c99deF:1'" class="bg-blue-600/20 text-blue-400 text-[10px] font-bold py-3 rounded-xl border border-blue-500/30 uppercase tracking-widest flex flex-col items-center">
                     <span>General Pass</span>
-                    <span class="text-[8px] opacity-70">3333 Ltd</span>
+                    <span class="text-[7px] opacity-70">Free Public Access</span>
                 </button>
-                <button onclick="window.location.href='https://warpcast.com/eagle-pi'" class="bg-gray-800/40 text-gray-400 text-[10px] font-bold py-3 rounded-xl border border-white/10 uppercase tracking-widest flex flex-col items-center">
-                    <span>Top Pilots</span>
-                    <span class="text-[8px] opacity-70">Leaderboard</span>
+                <button onclick="window.location.href='hall.html'" class="bg-gray-800/40 text-gray-400 text-[10px] font-bold py-3 rounded-xl border border-white/10 uppercase tracking-widest flex flex-col items-center">
+                    <span>Hall of Fame</span>
+                    <span class="text-[7px] opacity-70">Top Pilots</span>
                 </button>
             </div>
         </div>
-        </div>
-            <script>
+    </div>
+
+    <script>
         const streakEl = document.getElementById('streakCount');
         let streak = localStorage.getItem('eagleStreak') || 0;
         let lastDate = localStorage.getItem('eagleLastDate');
