@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -24,31 +24,30 @@
             👑 Elite Pass (Unlock Nest)
         </a>
     </nav>
-
-    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="max-w-md mx-auto px-4 py-4">
         <header class="text-center mb-4">
             <h1 class="text-3xl font-black tracking-tighter neon-text uppercase">Talon Arcade 🦅</h1>
             <div class="flex justify-center gap-4 mt-1">
                 <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-[10px]">
-                    <span class="text-blue-400 font-medium">Pilot Streak:</span> <span id="streakCount" class="font-bold">0</span> j
+                    <span class="text-blue-400 font-medium">Pilot Streak:</span> <span id="streakCount" class="font-bold">0</span> d
                 </div>
             </div>
         </header>
 
         <div class="glass mb-6 p-4 rounded-2xl border-blue-500/30">
-            <h3 class="text-[10px] text-blue-400 uppercase font-black mb-2 tracking-widest">Guide du Pilote 📋</h3>
+            <h3 class="text-[10px] text-blue-400 uppercase font-black mb-2 tracking-widest">Pilot's Guide 📋</h3>
             <div class="space-y-2">
                 <div class="flex gap-2 items-start">
                     <span class="text-xs">🪙</span>
-                    <p class="text-[9px] text-gray-400 leading-tight">Chaque partie coûte <span class="text-white font-bold">1 $TALON</span> (sauf 1er tour de roue offert).</p>
+                    <p class="text-[9px] text-gray-400 leading-tight">Each game costs <span class="text-white font-bold">1 $TALON</span> (1st wheel spin is free).</p>
                 </div>
                 <div class="flex gap-2 items-start">
                     <span class="text-xs">🎟️</span>
-                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-blue-300 font-bold text-[10px]">GENERAL PASS :</span> Jouez gratuitement à vie aux jeux publics.</p>
+                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-blue-300 font-bold text-[10px]">GENERAL PASS:</span> Play public games for free forever.</p>
                 </div>
                 <div class="flex gap-2 items-start">
                     <span class="text-xs">👑</span>
-                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-amber-500 font-bold text-[10px]">ELITE PASS :</span> Débloque le "Elite Nest" & bonus exclusifs.</p>
+                    <p class="text-[9px] text-gray-400 leading-tight"><span class="text-amber-500 font-bold text-[10px]">ELITE PASS:</span> Unlocks the "Elite Nest" & exclusive bonuses.</p>
                 </div>
             </div>
         </div>
@@ -77,8 +76,7 @@
                 </a>
             </div>
         </div>
-
-        <div class="mb-8">
+                <div class="mb-8">
             <h2 class="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-3 px-1 flex justify-between items-center">
                 <span>Elite Nest (Elite NFT Required)</span>
                 <span class="text-[8px] bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 italic font-black">PREMIUM ONLY</span>
@@ -102,7 +100,7 @@
 
         <div class="space-y-3">
             <button onclick="share()" class="w-full bg-white text-black text-xs font-black py-4 rounded-2xl uppercase tracking-tighter active:scale-95 transition-transform">
-                Partager ma Streak 🚀
+                Share my Streak 🚀
             </button>
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="window.location.href='https://highlight.xyz/mint/base:0x57D361170e2F8E7e4490D14120eA93D551c99deF:1'" class="bg-blue-600/20 text-blue-400 text-[10px] font-bold py-3 rounded-xl border border-blue-500/30 uppercase tracking-widest flex flex-col items-center">
@@ -134,7 +132,7 @@
         }
 
         function share() {
-            const text = encodeURIComponent(`🦅 Ma streak est de ${streak} jours sur la TALON Arcade ! 🔥 @eagle-pi`);
+            const text = encodeURIComponent(`🦅 My streak is ${streak} days on TALON Arcade! 🔥 @eagle-pi`);
             window.location.href = `https://warpcast.com/~/compose?text=${text}&embeds[]=https://farcoins.vercel.app/airdrop`;
         }
     </script>
