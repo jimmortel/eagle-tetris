@@ -15,14 +15,20 @@
         .premium-border { border: 1px solid rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.03); }
         .game-card { padding: 0.75rem !important; }
         .game-icon { font-size: 2rem !important; margin-bottom: 0.25rem !important; }
+        #connectBtn.connected { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
     </style>
 </head>
 <body class="text-white font-sans antialiased text-[11px]">
     <nav class="w-full flex justify-between items-center px-3 py-1.5 bg-black/40 border-b border-white/10">
         <span class="text-[8px] font-bold tracking-widest text-blue-400 uppercase">TALON SYNC (BASE)</span>
-        <a href="https://highlight.xyz/mint/base:0xa2A15fFaA85D3deC725aEFaED66c9C5141aC35A8:1" class="text-[8px] bg-amber-500/15 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-amber-500 font-bold uppercase tracking-tighter hover:bg-amber-500/30 transition-colors">
-            👑 Elite
-        </a>
+        <div class="flex gap-2">
+            <button id="connectBtn" onclick="connectWallet()" class="text-[8px] border border-white/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-tighter hover:bg-white/10 transition-colors">
+                🦅 Connect Wallet
+            </button>
+            <a href="https://highlight.xyz/mint/base:0xa2A15fFaA85D3deC725aEFaED66c9C5141aC35A8:1" class="text-[8px] bg-amber-500/15 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-amber-500 font-bold uppercase tracking-tighter hover:bg-amber-500/30 transition-colors">
+                👑 Elite
+            </a>
+        </div>
     </nav>
 
     <div class="max-w-md mx-auto px-3 py-2">
@@ -116,11 +122,27 @@
 
     <script>
         const streakEl = document.getElementById('streakCount');
+        const connectBtn = document.getElementById('connectBtn');
         let streak = localStorage.getItem('eagleStreak') || 0;
         let lastDate = localStorage.getItem('eagleLastDate');
         streakEl.innerText = streak;
 
-        // Fonction pour lancer les jeux avec vérification
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    updateUI(accounts[0]);
+                } catch (e) { console.error("User rejected"); }
+            } else {
+                alert("Please use a Web3 Browser (Metamask/Coinbase Wallet)");
+            }
+        }
+
+        function updateUI(address) {
+            connectBtn.innerText = address.substring(0, 4) + "..." + address.substring(address.length - 3);
+            connectBtn.classList.add('connected');
+        }
+
         async function launchGame(url, gameId) {
             const hasAccess = await checkGameAccess(gameId);
             if (hasAccess) {
@@ -143,6 +165,13 @@
             const text = encodeURIComponent(`🦅 Streak: ${streak} days on TALON Arcade! 🔥 @eagle-pi`);
             window.location.href = `https://warpcast.com/~/compose?text=${text}&embeds[]=https://eagle-tetris.vercel.app/`;
         }
+
+        window.onload = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) updateUI(accounts[0]);
+            }
+        };
     </script>
 </body>
-</html>
+    </html>
